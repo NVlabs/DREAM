@@ -1,0 +1,55 @@
+!!omap
+- manipulator: !!omap
+  - name: baxter
+  - keypoints:
+    - name: torso_t0
+      friendly_name: Torso
+      ros_frame: torso_t0
+    - name: left_s0
+      friendly_name: Left:S0
+      ros_frame: left_s0
+    - name: left_s1
+      friendly_name: Left:S1
+      ros_frame: left_s1
+    - name: left_e0
+      friendly_name: Left:E0
+      ros_frame: left_e0
+    - name: left_e1
+      friendly_name: Left:E1
+      ros_frame: left_e1
+    - name: left_w0
+      friendly_name: Left:W0
+      ros_frame: left_w0
+    - name: left_w1
+      friendly_name: Left:W1
+      ros_frame: left_w1
+    - name: left_w2
+      friendly_name: Left:W2
+      ros_frame: left_w2
+    - name: left_hand
+      friendly_name: LeftHand
+      ros_frame: left_hand
+    - name: right_s0
+      friendly_name: Right:S0
+      ros_frame: right_s0
+    - name: right_s1
+      friendly_name: Right:S1
+      ros_frame: right_s1
+    - name: right_e0
+      friendly_name: Right:E0
+      ros_frame: right_e0
+    - name: right_e1
+      friendly_name: Right:E1
+      ros_frame: right_e1
+    - name: right_w0
+      friendly_name: Right:W0
+      ros_frame: right_w0
+    - name: right_w1
+      friendly_name: Right:W1
+      ros_frame: right_w1
+    - name: right_w2
+      friendly_name: Right:W2
+      ros_frame: right_w2
+    - name: right_hand
+      friendly_name: RightHand
+      ros_frame: right_hand

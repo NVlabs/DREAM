@@ -1,0 +1,25 @@
+!!omap
+- manipulator: !!omap
+  - name: panda
+  - keypoints:
+    - name: panda_link0
+      friendly_name: Base
+      ros_frame: panda_link0
+    - name: panda_link2
+      friendly_name: Joint2
+      ros_frame: panda_link2
+    - name: panda_link3
+      friendly_name: Joint3
+      ros_frame: panda_link3
+    - name: panda_link4
+      friendly_name: Joint4
+      ros_frame: panda_link4
+    - name: panda_link6
+      friendly_name: Joint6
+      ros_frame: panda_link6
+    - name: panda_link7
+      friendly_name: Joint7
+      ros_frame: panda_link7
+    - name: panda_hand
+      friendly_name: Hand
+      ros_frame: panda_hand

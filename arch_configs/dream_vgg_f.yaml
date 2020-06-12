@@ -1,0 +1,18 @@
+!!omap
+- architecture: !!omap
+  - type: vgg
+  - target: belief_maps
+  - deconv_decoder: true
+  - input_heads:
+    - image_rgb
+  - output_heads:
+    - belief_maps
+  - image_normalization: !!omap
+    - mean: [0.5, 0.5, 0.5]
+    - stdev: [0.5, 0.5, 0.5]
+  - loss: !!omap
+    - type: mse
+- training: !!omap
+  - config: !!omap
+    - image_preprocessing: shrink-and-crop
+    - net_input_resolution: [400, 400]

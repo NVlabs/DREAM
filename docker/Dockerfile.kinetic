@@ -1,0 +1,81 @@
+FROM nvidia/cudagl:10.0-devel-ubuntu16.04
+
+# Copyright (c) 2020, NVIDIA CORPORATION. All rights reserved.
+# Full license terms provided in LICENSE.md file.
+
+# Build with:
+# docker build -t nvidia-dream:kinetic-v1 -f Dockerfile.kinetic ..
+
+ENV HOME /root
+
+WORKDIR ${HOME}
+
+RUN apt-get update && apt-get -y --no-install-recommends install software-properties-common
+
+# install packages requried for setup and installing ROS
+RUN apt-get update && apt-get install -q -y \
+    dirmngr \
+    gnupg2 \
+    wget \
+    python-tk \
+    && rm -rf /var/lib/apt/lists/*
+
+# install python
+RUN add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get -y --no-install-recommends install python libpython-dev \
+    && wget https://bootstrap.pypa.io/get-pip.py \
+    && python2.7 get-pip.py
+
+# Install DREAM requirements
+COPY requirements.txt ${HOME}
+RUN python2 -m pip install --no-cache-dir -r requirements.txt
+
+# set up keys
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
+    --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+
+# setup sources.list
+RUN echo "deb http://packages.ros.org/ros/ubuntu xenial main" > /etc/apt/sources.list.d/ros1-latest.list
+
+# install bootstrap tools
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    python-rosdep \
+    python-rosinstall \
+    python-vcstools \
+    && rm -rf /var/lib/apt/lists/*
+
+# setup environment
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+ENV DISPLAY :0
+# Some QT-Apps don't not show controls without this
+ENV QT_X11_NO_MITSHM 1
+
+# bootstrap rosdep
+ENV ROS_DISTRO kinetic
+RUN rosdep init \
+    && rosdep update --rosdistro $ROS_DISTRO
+
+# install ros packages
+RUN apt-get update \
+    && apt-get install -y ros-kinetic-ros-core=1.3.2-0* \
+    && apt-get install --no-install-recommends -y \
+       ros-$ROS_DISTRO-rviz       \
+       ros-$ROS_DISTRO-tf2        \
+       ros-$ROS_DISTRO-cv-bridge  \
+       ros-$ROS_DISTRO-image-view \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN echo 'source /opt/ros/$ROS_DISTRO/setup.bash' >> ${HOME}/.bashrc
+RUN echo 'source /root/catkin_ws/devel/setup.bash' >> ${HOME}/.bashrc
+
+# Setup catkin workspace
+ENV CATKIN_WS ${HOME}/catkin_ws
+COPY docker/init_workspace.sh ${HOME}
+RUN ${HOME}/init_workspace.sh
+
+# cleanup
+RUN rm /root/requirements.txt /root/get-pip.py /root/init_workspace.sh
+
+CMD ["bash"]

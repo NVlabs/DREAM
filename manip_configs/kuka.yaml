@@ -1,0 +1,28 @@
+!!omap
+- manipulator: !!omap
+  - name: kuka
+  - keypoints:
+    - name: iiwa7_link_0
+      friendly_name: Base
+      ros_frame: iiwa7_link_0
+    - name: iiwa7_link_1
+      friendly_name: Joint1
+      ros_frame: iiwa7_link_1
+    - name: iiwa7_link_2
+      friendly_name: Joint2
+      ros_frame: iiwa7_link_2
+    - name: iiwa7_link_3
+      friendly_name: Joint3
+      ros_frame: iiwa7_link_3
+    - name: iiwa7_link_4
+      friendly_name: Joint4
+      ros_frame: iiwa7_link_4
+    - name: iiwa7_link_5
+      friendly_name: Joint5
+      ros_frame: iiwa7_link_5
+    - name: iiwa7_link_6
+      friendly_name: Joint6
+      ros_frame: iiwa7_link_6
+    - name: iiwa7_link_7
+      friendly_name: Wrist
+      ros_frame: iiwa7_link_7
