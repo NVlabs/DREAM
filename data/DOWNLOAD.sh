@@ -3,9 +3,6 @@
 # This script makes it easy to download real/synthetic images with annotations.
 # (Files are at https://drive.google.com/open?id=1Krp-fCT9ffEML3IpweSOgWiMHHBw6k2Z)
 
-# First, be sure to install gdown:
-#   `pip install gdown`
-
 # Comment out any data you do not want.
 
 echo 'Warning:  Files are *very* large.  Be sure to comment out any files you do not want.'
