@@ -3,9 +3,6 @@
 # This script makes it easy to download pretrained model weights.
 # (Files are at https://drive.google.com/open?id=1Krp-fCT9ffEML3IpweSOgWiMHHBw6k2Z)
 
-# First, be sure to install gdown:
-#   `pip install gdown`
-
 # Each robot contains two files (.pth and .yaml).
 # Comment out any model you do not want.
 
