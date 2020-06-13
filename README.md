@@ -1,4 +1,4 @@
-# DREAM: Deep Robot-to-camera Extrinsics for Articulated Manipulators
+# DREAM: Deep Robot-to-Camera Extrinsics for Articulated Manipulators
 
 This is the official implementation of ["Camera-to-robot pose estimation from a single image"](https://arxiv.org/abs/1911.09231) (ICRA 2020).  The DREAM system uses a robot-specific deep neural network to detect keypoints (typically joint locations) in the RGB image of a robot manipulator. Using these keypoint locations along with the robot forward kinematics, the camera pose with respect to the
 robot is estimated using a perspective-n-point (PnP) algorithm.  For more details, please see our [paper](https://arxiv.org/abs/1911.09231) and [video](https://youtu.be/O1qAFboFQ8A).
