@@ -13,7 +13,7 @@ We have tested on Ubuntu 16.04 and 18.04 with an NVIDIA GeForce RTX 2080 and Tit
 Install the DREAM package and its dependencies using `pip`:
 
 ```
-pip install -r requirements.txt
+pip install . -r requirements.txt
 ```
 
 Download the pre-trained models and (optionally) data.  In the scripts below, be sure to comment out files you do not want, as they are very large.  Alternatively, you can download files [manually](https://drive.google.com/drive/folders/1Krp-fCT9ffEML3IpweSOgWiMHHBw6k2Z?usp=sharing)
