@@ -86,8 +86,7 @@ def find_ndds_data_in_dir(
     if image_extension is None:
         # Auto detect based on list of image extensions to try
         # In case there is a tie, prefer the extensions that are closer to the front
-        # Prefer bmp over jpg because jpg is lossy
-        image_exts_to_try = ["png", "bmp", "jpg"]
+        image_exts_to_try = ["png", "jpg"]
         num_image_exts = []
         for image_ext in image_exts_to_try:
             num_image_exts.append(len([f for f in dirlist if f.endswith(image_ext)]))
