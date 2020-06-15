@@ -86,7 +86,8 @@ def find_ndds_data_in_dir(
     if image_extension is None:
         # Auto detect based on list of image extensions to try
         # In case there is a tie, prefer the extensions that are closer to the front
-        image_exts_to_try = ["png", "jpg"]
+        # Prefer bmp over jpg because jpg is lossy
+        image_exts_to_try = ["png", "bmp", "jpg"]
         num_image_exts = []
         for image_ext in image_exts_to_try:
             num_image_exts.append(len([f for f in dirlist if f.endswith(image_ext)]))
@@ -94,6 +95,13 @@ def find_ndds_data_in_dir(
         idx_max = np.where(num_image_exts == max_num_image_exts)[0]
         # If there are multiple indices due to ties, this uses the one closest to the front
         image_extension = image_exts_to_try[idx_max[0]]
+        # Mention to user if there are multiple cases to ensure they are aware of the selection
+        if len(idx_max) > 1 and max_num_image_exts > 0:
+            print(
+                'Multiple sets of images detected in NDDS dataset with different extensions. Using extension "{}".'.format(
+                    image_extension
+                )
+            )
     else:
         assert isinstance(
             image_extension, str
