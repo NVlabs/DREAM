@@ -65,11 +65,7 @@ def is_ndds_dataset(input_dir, data_extension="json"):
 
 
 def find_ndds_data_in_dir(
-    input_dir,
-    data_extension="json",
-    image_extension="png",
-    predictive=False,
-    requested_image_types="all",
+    input_dir, data_extension="json", image_extension=None, requested_image_types="all",
 ):
 
     # Input argument handling
@@ -78,27 +74,46 @@ def find_ndds_data_in_dir(
     assert os.path.exists(
         input_dir
     ), 'Expected path "{}" to exist, but it does not.'.format(input_dir)
+    dirlist = os.listdir(input_dir)
+
     assert isinstance(
         data_extension, str
     ), 'Expected "data_extension" to be a string, but it is "{}".'.format(
         type(data_extension)
     )
-    assert isinstance(
-        image_extension, str
-    ), 'Expected "image_extension" to be a string, but it is "{}".'.format(
-        type(image_extension)
-    )
+    data_full_ext = "." + data_extension
+
+    if image_extension is None:
+        # Auto detect based on list of image extensions to try
+        # In case there is a tie, prefer the extensions that are closer to the front
+        image_exts_to_try = ["png", "jpg"]
+        num_image_exts = []
+        for image_ext in image_exts_to_try:
+            num_image_exts.append(len([f for f in dirlist if f.endswith(image_ext)]))
+        max_num_image_exts = np.max(num_image_exts)
+        idx_max = np.where(num_image_exts == max_num_image_exts)[0]
+        # If there are multiple indices due to ties, this uses the one closest to the front
+        image_extension = image_exts_to_try[idx_max[0]]
+        # Mention to user if there are multiple cases to ensure they are aware of the selection
+        if len(idx_max) > 1 and max_num_image_exts > 0:
+            print(
+                'Multiple sets of images detected in NDDS dataset with different extensions. Using extension "{}".'.format(
+                    image_extension
+                )
+            )
+    else:
+        assert isinstance(
+            image_extension, str
+        ), 'If specified, expected "image_extension" to be a string, but it is "{}".'.format(
+            type(image_extension)
+        )
+    image_full_ext = "." + image_extension
 
     assert (
         requested_image_types is None
         or requested_image_types == "all"
         or isinstance(requested_image_types, list)
     ), "Expected \"requested_image_types\" to be None, 'all', or a list of requested_image_types."
-
-    data_full_ext = "." + data_extension
-    image_full_ext = "." + image_extension
-
-    dirlist = os.listdir(input_dir)
 
     # Read in json files
     data_filenames = [f for f in dirlist if f.endswith(data_full_ext)]
