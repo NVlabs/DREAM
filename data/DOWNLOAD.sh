@@ -23,8 +23,8 @@ cd ..
 
 #----- synthetic training / validation data -----------------------------------
 
-#mkdir -p synthetic
-#cd synthetic
+mkdir -p synthetic
+cd synthetic
 
 #----- Rethink Robotics' Baxter
 gdown --id 1MSRwQpg690RvuvtjNuGYA1ILGipX16dW  # test DR (541 MB)
