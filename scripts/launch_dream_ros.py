@@ -7,11 +7,13 @@
 import argparse
 import os
 
+import cv2
 import numpy as np
 from PIL import Image as PILImage
 from pyrr import Quaternion
 from ruamel.yaml import YAML
 import torch
+import webcolors
 
 import rospy
 
@@ -46,6 +48,7 @@ topic_out_keypoint_overlay = "/dream/keypoint_overlay"
 topic_out_belief_maps = "/dream/belief_maps"
 topic_out_keypoint_belief_overlay = "/dream/keypoint_belief_overlay"
 topic_out_keypoint_names = "/dream/keypoint_names"
+topic_out_keypoint_frame_overlay = "/dream/keypoint_frame_overlay"
 
 # ROS frames for the output of DREAM
 # tform_out_basename is now set by the user - previously was 'dream/base_frame'
@@ -148,6 +151,9 @@ class DreamInferenceROS:
         )
         self.kp_belief_overlay_pub = rospy.Publisher(
             topic_out_keypoint_belief_overlay, Image, queue_size=1
+        )
+        self.kp_frame_overlay_pub = rospy.Publisher(
+            topic_out_keypoint_frame_overlay, Image, queue_size=1
         )
 
         # Store the base frame for the TF lookup
@@ -492,6 +498,134 @@ class DreamInferenceROS:
     def publish_pose(self):
         self.camera_pose_tform.header.stamp = rospy.Time().now()
         self.tf_broadcaster.sendTransform(self.camera_pose_tform)
+
+        num_connect_kp_frame_overlay_pub = (
+            self.kp_frame_overlay_pub.get_num_connections()
+        )
+        if num_connect_kp_frame_overlay_pub > 0:
+
+            if self.cv_image is None or self.camera_K is None:
+                return
+
+            all_kp_transforms = []
+            for i in range(len(self.keypoint_tf_frames)):
+                keypoint_tf_frame = self.keypoint_tf_frames[i]
+                # Lookup transform between dream published frame and keypoint frames
+                try:
+                    tform = self.tfBuffer.lookup_transform(
+                        self.camera_pose_tform.child_frame_id,
+                        keypoint_tf_frame,
+                        rospy.Time(),
+                    )
+                    all_kp_transforms.append(tform)
+
+                except tf2.TransformException as e:
+                    print("TF Exception: {}".format(e))
+                    return None, None
+
+            cv_image_overlay = self.cv_image.copy()
+
+            frame_len = 0.1
+            frame_thickness = 3
+            frame_triad_pts = np.array(
+                [
+                    [0.0, 0.0, 0.0, 1.0],
+                    [frame_len, 0.0, 0.0, 1.0],
+                    [0.0, frame_len, 0.0, 1.0],
+                    [0.0, 0.0, frame_len, 1.0],
+                ]
+            )
+            shift = 4
+            factor = 1 << shift
+            point_radius = 4.0
+
+            for kp_tform in all_kp_transforms:
+                pos = [
+                    kp_tform.transform.translation.x,
+                    kp_tform.transform.translation.y,
+                    kp_tform.transform.translation.z,
+                ]
+                quat = [
+                    kp_tform.transform.rotation.x,
+                    kp_tform.transform.rotation.y,
+                    kp_tform.transform.rotation.z,
+                    kp_tform.transform.rotation.w,
+                ]
+                T = tf.transformations.quaternion_matrix(quat)
+                T[:3, -1] = pos
+
+                frame_triad_positions_homog = np.transpose(
+                    np.matmul(T, np.transpose(frame_triad_pts))
+                )
+                frame_triad_positions = [
+                    dream.geometric_vision.hnormalized(v).tolist()
+                    for v in frame_triad_positions_homog
+                ]
+                frame_triad_projs = dream.geometric_vision.point_projection_from_3d(
+                    self.camera_K, frame_triad_positions
+                )
+
+                # Overlay line on image
+                point0_fixedpt = (
+                    int(frame_triad_projs[0][0] * factor),
+                    int(frame_triad_projs[0][1] * factor),
+                )
+                point1_fixedpt = (
+                    int(frame_triad_projs[1][0] * factor),
+                    int(frame_triad_projs[1][1] * factor),
+                )
+                point2_fixedpt = (
+                    int(frame_triad_projs[2][0] * factor),
+                    int(frame_triad_projs[2][1] * factor),
+                )
+                point3_fixedpt = (
+                    int(frame_triad_projs[3][0] * factor),
+                    int(frame_triad_projs[3][1] * factor),
+                )
+
+                # x-axis
+                cv_image_overlay = cv2.line(
+                    cv_image_overlay,
+                    point0_fixedpt,
+                    point1_fixedpt,
+                    webcolors.name_to_rgb("red"),
+                    thickness=frame_thickness,
+                    shift=shift,
+                )
+                # y-axis
+                cv_image_overlay = cv2.line(
+                    cv_image_overlay,
+                    point0_fixedpt,
+                    point2_fixedpt,
+                    webcolors.name_to_rgb("green"),
+                    thickness=frame_thickness,
+                    shift=shift,
+                )
+                # z-axis
+                cv_image_overlay = cv2.line(
+                    cv_image_overlay,
+                    point0_fixedpt,
+                    point3_fixedpt,
+                    webcolors.name_to_rgb("blue"),
+                    thickness=frame_thickness,
+                    shift=shift,
+                )
+                # center of frame triad
+                radius_fixedpt = int(point_radius * factor)
+                cv_image_overlay = cv2.circle(
+                    cv_image_overlay,
+                    point0_fixedpt,
+                    radius_fixedpt,
+                    webcolors.name_to_rgb("black"),
+                    thickness=-1,
+                    shift=shift,
+                )
+
+            cv_image_overlay = cv_image_overlay[:, :, ::-1]
+            image_overlay_msg = self.bridge.cv2_to_imgmsg(
+                cv_image_overlay, encoding="bgr8"
+            )
+            self.kp_frame_overlay_pub.publish(image_overlay_msg)
 
 
 if __name__ == "__main__":
