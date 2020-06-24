@@ -499,10 +499,8 @@ class DreamInferenceROS:
         self.camera_pose_tform.header.stamp = rospy.Time().now()
         self.tf_broadcaster.sendTransform(self.camera_pose_tform)
 
-        num_connect_kp_frame_overlay_pub = (
-            self.kp_frame_overlay_pub.get_num_connections()
-        )
-        if num_connect_kp_frame_overlay_pub > 0:
+        # Generate and publish keypoint frame overlay
+        if self.kp_frame_overlay_pub.get_num_connections() > 0:
 
             if self.cv_image is None or self.camera_K is None:
                 return
