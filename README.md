@@ -118,7 +118,7 @@ The PCK and ADD plots in the paper are generated from `oks_plots.py` and `add_pl
 
 # Further information
 
-For an example of how DREAM can be used in practice for vision-based object manipulation, please refer to [``Indirect Object-to-Robot Pose Estimation from an External Monocular RGB Camera''](https://research.nvidia.com/publication/2020-07_Indirect-Object-Pose) by Jonathan Tremblay, Stephen Tyree, Terry Mosier, and Stan Birchfield.
+For an example of how DREAM can be used in practice for vision-based object manipulation, please refer to ["Indirect Object-to-Robot Pose Estimation from an External Monocular RGB Camera"](https://research.nvidia.com/publication/2020-07_Indirect-Object-Pose) by Jonathan Tremblay, Stephen Tyree, Terry Mosier, and Stan Birchfield.
 
 For more information on how DREAM learns robot keypoint detection from sim-to-real transfer using only synthetic domain randomized images, please refer to our [sim2realAI blog post](https://sim2realai.github.io/dream-camera-calibration-sim2real/).
 
