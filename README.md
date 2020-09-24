@@ -116,6 +116,13 @@ The experiments in the paper used the image preprocessing type `shrink-and-crop`
 
 The PCK and ADD plots in the paper are generated from `oks_plots.py` and `add_plots.py`. The AUC in these figures (and in Table 1) are in the `analysis_results.txt` file that is produced by `scripts/network_inference_dataset.py`.
 
+# Further information
+
+For an example of how DREAM can be used in practice for vision-based object manipulation, please refer to ["Indirect Object-to-Robot Pose Estimation from an External Monocular RGB Camera"](https://research.nvidia.com/publication/2020-07_Indirect-Object-Pose) by Jonathan Tremblay, Stephen Tyree, Terry Mosier, and Stan Birchfield.
+
+For more information on how DREAM learns robot keypoint detection from sim-to-real transfer using only synthetic domain randomized images, please refer to our [sim2realAI blog post](https://sim2realai.github.io/dream-camera-calibration-sim2real/).
+
+
 # License
 
 DREAM is licensed under the [NVIDIA Source Code License - Non-commercial](LICENSE.md).
