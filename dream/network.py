@@ -553,7 +553,7 @@ class DreamNetwork:
                         if self.use_belief_peak_scores and len(peak) > 1:
                             # Try to use the belief map scores
                             peak_sorted_by_score = sorted(
-                                peak, key=lambda x: x[1], reverse=True
+                                peak, key=lambda x: x[2], reverse=True
                             )
                             if (
                                 peak_sorted_by_score[0][2] - peak_sorted_by_score[1][2]
