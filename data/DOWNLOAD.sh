@@ -36,7 +36,7 @@ gdown --id 1ChF4jAGMPbPwe2dOZYPJ2t2rCSR0Xw9R  # test non-DR (222 MB)
 gdown --id 1HTW3YEGDO22zOT56jFWxfizznw4aGMpU  # train (8 GB)
 
 #----- Franka Emika Panda
-gdown --id 12bvDmr6cZZaCNadOWf_4EOHI9sp97yah  # test DR (450 MB)
+gdown --id 1tOzfzlRhUbRO-QkzPHvj-IOPFuSIts-R  # test DR (450 MB)
 gdown --id 11pK1BqfQkzVnTjyQHVRZ6ZkX4oyxbEQP  # test non-DR (190 MB)
 gdown --id 1ZXzseMa7aMIKxK4BNH2gacmm3_XGJvxm  # train (8 GB)
 
